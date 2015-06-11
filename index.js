@@ -44,7 +44,7 @@ app.get("/exercise/:exerciseSlug", function ( req, res ) {
 
       if ( err ) return res.status(500).send(err);
 
-      res.json({
+      res.jsonp({
         exercises: foundExercises,
         exerciseType: foundType
       });
@@ -58,7 +58,7 @@ app.get("/", function ( req, res ) {
 
     if ( err ) return res.status(500).send(err);
 
-    res.json( exercises );
+    res.jsonp( exercises );
   });
 });
 
