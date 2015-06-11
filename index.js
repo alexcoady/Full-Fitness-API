@@ -50,8 +50,6 @@ app.get("/exercise/:exerciseSlug", function ( req, res ) {
       });
     });
   });
-
-
 });
 
 app.get("/", function ( req, res ) {
