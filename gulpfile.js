@@ -3,8 +3,8 @@ var nodemon = require("gulp-nodemon");
 
 gulp.task("start", function () {
   nodemon({
-    script: "index.js"
-  , ext: "js html"
-  , env: { "NODE_ENV": "development" }
+    script: "index.js",
+    ext: "js html",
+    env: { "NODE_ENV": "development" }
   })
 })
