@@ -10,4 +10,4 @@ Standard rules apply
 - `git clone https://github.com/alexcoady/Full-Fitness-API.git`
 - `cd Full-Fitness-API`
 - `npm install`
-- `node index.js // gulp to follow`
+- `gulp start`
