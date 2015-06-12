@@ -10,4 +10,5 @@ Standard rules apply
 - `git clone https://github.com/alexcoady/Full-Fitness-API.git`
 - `cd Full-Fitness-API`
 - `npm install`
+- `mongod // Requires mongodb to be installed`
 - `gulp start`
