@@ -7,6 +7,8 @@ var _               = require("lodash");
 var db              = require("./db");
 var ExerciseModel   = require("./exercise/exerciseModel").Model;
 var ExerciseTypeModel   = require("./exercise/exerciseTypeModel").Model;
+
+var exerciseRouter = require("./exercise/router");
 var app             = express();
 
 // App settings
@@ -26,41 +28,43 @@ app.use("/public", express.static(__dirname + "/../public/"));
 _.extend( app.locals, {
     _:          _,
 });
+//
+// app.get("/exercise/:exerciseSlug", function ( req, res ) {
+//
+//   var exerciseSlug = req.params.exerciseSlug;
+//
+//   console.log(exerciseSlug)
+//
+//   ExerciseTypeModel.findOne({ slug: exerciseSlug }, function ( err, foundType ) {
+//
+//     if ( err ) return res.status(500).send(err);
+//     if ( !foundType ) return res.send(404);
+//
+//     ExerciseModel.find({
+//       "exercise": foundType
+//     }).exec(function ( err, foundExercises ) {
+//
+//       if ( err ) return res.status(500).send(err);
+//
+//       res.jsonp({
+//         exercises: foundExercises,
+//         exerciseType: foundType
+//       });
+//     });
+//   });
+// });
+//
+// app.get("/", function ( req, res ) {
+//
+//   ExerciseModel.find({}).exec(function ( err, exercises ) {
+//
+//     if ( err ) return res.status(500).send(err);
+//
+//     res.jsonp( exercises );
+//   });
+// });
 
-app.get("/exercise/:exerciseSlug", function ( req, res ) {
-
-  var exerciseSlug = req.params.exerciseSlug;
-
-  console.log(exerciseSlug)
-
-  ExerciseTypeModel.findOne({ slug: exerciseSlug }, function ( err, foundType ) {
-
-    if ( err ) return res.status(500).send(err);
-    if ( !foundType ) return res.send(404);
-
-    ExerciseModel.find({
-      "exercise": foundType
-    }).exec(function ( err, foundExercises ) {
-
-      if ( err ) return res.status(500).send(err);
-
-      res.jsonp({
-        exercises: foundExercises,
-        exerciseType: foundType
-      });
-    });
-  });
-});
-
-app.get("/", function ( req, res ) {
-
-  ExerciseModel.find({}).exec(function ( err, exercises ) {
-
-    if ( err ) return res.status(500).send(err);
-
-    res.jsonp( exercises );
-  });
-});
+app.use( "/exercises", exerciseRouter );
 
 // Start the server
 app.listen( 3000, function () {
