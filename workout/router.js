@@ -35,6 +35,69 @@ router.get("/:workoutDate", function ( req, res ) {
   })
 });
 
+
+/**
+ *
+ *
+ *  @method byExerciseName
+ *  @param {Type} name desc
+ *  @return {Type}
+ */
+function byExerciseName ( set ) {
+  return set.exercise && set.exercise.name;
+}
+
+
+/**
+ *  Removes fields that do not need to be sent to the client
+ *
+ *  @method reduceSet
+ *  @param {Object} set A single set
+ *  @return {Object} simple set
+ */
+function reduceSet ( set ) {
+  return {
+    weight: set.weight,
+    reps: set.reps
+  }
+}
+
+
+/**
+ *  The exercise type is stripped out of the first set provided.
+ *  This method can assume that all sets form the same exercise.
+ *
+ *  @method composeWorkoutObject
+ *  @param {[Object]} sets Raw set objects
+ *  @return {Object} exercise object the client will recieve
+ */
+function composeExerciseObject ( sets ) {
+  return {
+    exercise: sets[0].exercise,
+    sets: _.map( sets, reduceSet )
+  };
+}
+
+
+/**
+ *  Creates a "workout" from a list of sets that ends up having
+ *  a date and a series of exercises
+ *
+ *  @method composeWorkoutObject
+ *  @param {[Object]} setsInWorkout raw set objects in a workout
+ *  @param {String} date String representing a date
+ *  @return {Object} workout object
+ */
+function composeWorkoutObject ( setsInWorkout, date ) {
+
+  var exercises = _.map(_.groupBy( setsInWorkout, byExerciseName ), composeExerciseObject );
+
+  return {
+    date: date,
+    exercises: exercises
+  };
+}
+
 router.get("/", function ( req, res ) {
 
   ExerciseModel.find({
@@ -43,38 +106,7 @@ router.get("/", function ( req, res ) {
 
     if ( err ) return res.status(500).send(err);
 
-    // Group all sets into workouts by date
-    var workouts = _.map(_.groupBy( allSets, "date" ), function ( setsOnDate, date ) {
-
-      // Group all sets within a date by the exercise
-      var exercises = _.map(_.groupBy( setsOnDate, function (set) {
-
-        return set.exercise && set.exercise.name;
-
-      }), function ( sets, exerciseName ) {
-
-        var exercise = sets[0].exercise;
-
-        // Reduce set information to remove properties held by parents
-        var sets = _.map( sets, function ( set ) {
-
-          return {
-            weight: set.weight,
-            reps: set.reps
-          };
-        });
-
-        return {
-          exercise: exercise,
-          sets: sets
-        };
-      });
-
-      return {
-        date: date,
-        exercises: exercises
-      };
-    });
+    var workouts = _.map(_.groupBy( allSets, "date" ), composeWorkoutObject );
 
     res.jsonp( workouts );
   });

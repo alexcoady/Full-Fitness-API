@@ -11,7 +11,7 @@ var ExerciseTypeModel = require("./exercise/exerciseTypeModel").Model;
 
 (function () {
 
-  fs.readFile( "data/jan.csv", "utf8", function ( err, data ) {
+  fs.readFile( "data/jun.csv", "utf8", function ( err, data ) {
 
     if ( err ) return console.error( err );
 

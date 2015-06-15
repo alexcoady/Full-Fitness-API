@@ -14,7 +14,7 @@ router.get("/:exerciseSlug", function ( req, res ) {
   ExerciseTypeModel.findOne({ slug: exerciseSlug }, function ( err, foundType ) {
 
     if ( err ) return res.status(500).send(err);
-    if ( !foundType ) return res.send(404);
+    if ( !foundType ) return res.status(404);
 
     ExerciseModel.find({
       "exercise": foundType
